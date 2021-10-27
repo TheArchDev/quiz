@@ -2,14 +2,21 @@ package main
 
 import (
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"os"
 )
 
-func main() {
-	fmt.Println("Thanks for starting a quiz!")
+var filename string
 
-	file, _ := os.Open("problems.csv")
+func init() {
+	flag.StringVar(&filename, "file", "problems.csv", "Specify quiz file")
+}
+
+func main() {
+	flag.Parse()
+	fmt.Printf("Starting a quiz from %v!\n", filename)
+	file, _ := os.Open(filename)
 	reader := csv.NewReader(file)
 
 	var user_answers [12]bool
