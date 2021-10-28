@@ -27,7 +27,7 @@ func main() {
 
 	correct_answers := 0
 	question_number := 0
-	for keep_reading := true; keep_reading; question_number++ {
+	for keep_reading := true; keep_reading; {
 		line, err := reader.Read()
 		if err != nil {
 			keep_reading = false
@@ -41,6 +41,7 @@ func main() {
 			if user_answer == correct_answer {
 				correct_answers += 1
 			}
+			question_number++
 		}
 	}
 	fmt.Printf("Correctly answered %v out of %v question(s)\n", correct_answers, question_number)
