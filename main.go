@@ -19,7 +19,8 @@ func init() {
 func main() {
 	flag.Parse()
 	fmt.Printf("Starting a quiz from %v!\n", filename)
-	fmt.Printf("Timer set for %v!\n", timer)
+	fmt.Printf("Timer set for %v seconds - hit any key to start!\n", timer)
+	fmt.Scanln()
 	file, _ := os.Open(filename)
 	reader := csv.NewReader(file)
 
