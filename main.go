@@ -8,14 +8,18 @@ import (
 )
 
 var filename string
+var timer int
 
 func init() {
-	flag.StringVar(&filename, "file", "problems.csv", "Specify quiz file")
+	flag.StringVar(&filename, "file", "problems.csv", "Quiz file")
+	flag.IntVar(&timer, "timer", 30, "Timer length in seconds")
 }
+
 
 func main() {
 	flag.Parse()
 	fmt.Printf("Starting a quiz from %v!\n", filename)
+	fmt.Printf("Timer set for %v!\n", timer)
 	file, _ := os.Open(filename)
 	reader := csv.NewReader(file)
 
