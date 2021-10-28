@@ -19,8 +19,9 @@ func main() {
 	file, _ := os.Open(filename)
 	reader := csv.NewReader(file)
 
-	var user_answers []bool
-	for i, keep_reading := 0, true; keep_reading; i++ {
+	correct_answers := 0
+	question_number := 0
+	for keep_reading := true; keep_reading; question_number++ {
 		line, err := reader.Read()
 		if err != nil {
 			keep_reading = false
@@ -31,8 +32,10 @@ func main() {
 			var user_answer string
 			fmt.Scanln(&user_answer)
 			fmt.Println()
-			user_answers = append(user_answers, user_answer == correct_answer)
+			if user_answer == correct_answer {
+				correct_answers += 1
+			}
 		}
 	}
-	fmt.Println(user_answers)
+	fmt.Printf("Correctly answered %v out of %v question(s)\n", correct_answers, question_number)
 }
