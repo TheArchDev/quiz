@@ -5,16 +5,19 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"time"
 )
 
 var filename string
 var timer int
+var shuffle bool
 
 func init() {
 	flag.StringVar(&filename, "file", "problems.csv", "Quiz file")
 	flag.IntVar(&timer, "timer", 30, "Timer length in seconds")
+	flag.BoolVar(&shuffle, "shuffle", false, "Shuffle questions")
 }
 
 func countdown(timer int) {
@@ -25,7 +28,7 @@ func countdown(timer int) {
 func run_quiz(data [][]string, c chan int) {
 	var number_correct int
 	c <- number_correct
-	for _, value := range(data) {
+	for _, value := range data {
 		question := value[0]
 		correct_answer := value[1]
 
@@ -35,13 +38,14 @@ func run_quiz(data [][]string, c chan int) {
 		fmt.Println()
 
 		if user_answer == correct_answer {
-			val := <- c
+			val := <-c
 			c <- val + 1
 		}
 	}
 }
 
 func main() {
+	rand.Seed(time.Now().Unix())
 	flag.Parse()
 
 	fmt.Printf("Starting a quiz from %v!\n", filename)
@@ -55,6 +59,14 @@ func main() {
 		log.Fatal(err)
 	}
 	number_of_questions := len(data)
+	if shuffle {
+		shuffled_data := make([][]string, number_of_questions)
+		randomised := rand.Perm(number_of_questions)
+		for index, value := range randomised {
+			shuffled_data[index] = data[value]
+		}
+		data = shuffled_data
+	}
 
 	c := make(chan int, 2)
 
