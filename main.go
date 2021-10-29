@@ -24,9 +24,9 @@ func countdown(timer int) {
 
 func run_quiz(data [][]string) int {
 	correct_answers := 0
-	for i := 0; i < len(data); i++ {
-		question := data[i][0]
-		correct_answer := data[i][1]
+	for _, value := range(data) {
+		question := value[0]
+		correct_answer := value[1]
 
 		fmt.Printf("What is the answer to: %v? \n", question)
 		var user_answer string
