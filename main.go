@@ -25,6 +25,15 @@ func countdown(timer int) {
 	fmt.Println("Timer over")
 }
 
+func shuffle_questions(data [][]string, number_of_questions int) [][]string {
+	shuffled_data := make([][]string, number_of_questions)
+	randomised := rand.Perm(number_of_questions)
+	for index, value := range randomised {
+		shuffled_data[index] = data[value]
+	}
+	return shuffled_data
+}
+
 func run_quiz(data [][]string, c chan int) {
 	var number_correct int
 	c <- number_correct
@@ -60,12 +69,7 @@ func main() {
 	}
 	number_of_questions := len(data)
 	if shuffle {
-		shuffled_data := make([][]string, number_of_questions)
-		randomised := rand.Perm(number_of_questions)
-		for index, value := range randomised {
-			shuffled_data[index] = data[value]
-		}
-		data = shuffled_data
+		data = shuffle_questions(data, number_of_questions)
 	}
 
 	c := make(chan int, 2)
