@@ -22,8 +22,9 @@ func countdown(timer int) {
 	fmt.Println("Timer over")
 }
 
-func run_quiz(data [][]string) int {
-	correct_answers := 0
+func run_quiz(data [][]string, c chan int) {
+	var number_correct int
+	c <- number_correct
 	for _, value := range(data) {
 		question := value[0]
 		correct_answer := value[1]
@@ -34,10 +35,10 @@ func run_quiz(data [][]string) int {
 		fmt.Println()
 
 		if user_answer == correct_answer {
-			correct_answers += 1
+			val := <- c
+			c <- val + 1
 		}
 	}
-	return correct_answers
 }
 
 func main() {
@@ -47,8 +48,6 @@ func main() {
 	fmt.Printf("Hit Enter to start your %v second(s) timer!\n", timer)
 	fmt.Scanln()
 
-	go countdown(timer)
-
 	file, _ := os.Open(filename)
 	reader := csv.NewReader(file)
 	data, err := reader.ReadAll()
@@ -57,8 +56,14 @@ func main() {
 	}
 	number_of_questions := len(data)
 
-	correct_answers := run_quiz(data)
+	c := make(chan int, 2)
 
-	fmt.Printf("Correctly answered %v out of %v question(s)\n", correct_answers, number_of_questions)
+	go run_quiz(data, c)
+
+	countdown(timer)
+
+	number_correct := <-c
+
+	fmt.Printf("Correctly answered %v out of %v question(s)\n", number_correct, number_of_questions)
 
 }
