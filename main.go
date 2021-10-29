@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"time"
 )
@@ -50,7 +51,10 @@ func main() {
 
 	file, _ := os.Open(filename)
 	reader := csv.NewReader(file)
-	data, _ := reader.ReadAll()
+	data, err := reader.ReadAll()
+	if err != nil {
+		log.Fatal(err)
+	}
 	number_of_questions := len(data)
 
 	correct_answers := run_quiz(data)
